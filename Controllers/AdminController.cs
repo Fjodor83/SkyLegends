@@ -27,7 +27,12 @@ namespace SkyLegends.Controllers
         // GET: Admin/Posters
         public async Task<IActionResult> Posters()
         {
-            return View(await _context.Posters.ToListAsync());
+            var posters = await _context.Posters
+                .AsNoTracking()
+                .OrderByDescending(p => p.CreatedAt)
+                .ToListAsync();
+
+            return View(posters);
         }
 
         // GET: Admin/CreatePoster
@@ -45,23 +50,7 @@ namespace SkyLegends.Controllers
             {
                 if (imageFile != null && imageFile.Length > 0)
                 {
-                    var fileName = Path.GetFileName(imageFile.FileName);
-                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + fileName;
-                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "img", "posters");
-
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-
-                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await imageFile.CopyToAsync(stream);
-                    }
-
-                    poster.ImageUrl = "/img/posters/" + uniqueFileName;
+                    poster.ImageUrl = await SavePosterImageAsync(imageFile);
                 }
                 else
                 {
@@ -123,19 +112,7 @@ namespace SkyLegends.Controllers
                 {
                     if (imageFile != null && imageFile.Length > 0)
                     {
-                        var fileName = Path.GetFileName(imageFile.FileName);
-                        var uniqueFileName = Guid.NewGuid().ToString() + "_" + fileName;
-                        var uploadsFolder = Path.Combine(_environment.WebRootPath, "img", "posters");
-
-                        if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
-
-                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await imageFile.CopyToAsync(stream);
-                        }
-
-                        poster.ImageUrl = "/img/posters/" + uniqueFileName;
+                        poster.ImageUrl = await SavePosterImageAsync(imageFile);
                     }
 
                     _context.Update(poster);
@@ -154,7 +131,12 @@ namespace SkyLegends.Controllers
         // GET: Admin/Videos
         public async Task<IActionResult> Videos()
         {
-            return View(await _context.Videos.ToListAsync());
+            var videos = await _context.Videos
+                .AsNoTracking()
+                .OrderByDescending(v => v.CreatedAt)
+                .ToListAsync();
+
+            return View(videos);
         }
 
         // GET: Admin/CreateVideo
@@ -201,6 +183,24 @@ namespace SkyLegends.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Videos));
+        }
+
+        private async Task<string> SavePosterImageAsync(IFormFile imageFile)
+        {
+            var fileName = Path.GetFileName(imageFile.FileName);
+            var uniqueFileName = $"{Guid.NewGuid()}_{fileName}";
+            var uploadsFolder = Path.Combine(_environment.WebRootPath, "img", "posters");
+
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            await using var stream = new FileStream(filePath, FileMode.Create);
+            await imageFile.CopyToAsync(stream);
+
+            return $"/img/posters/{uniqueFileName}";
         }
     }
 }

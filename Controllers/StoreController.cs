@@ -17,7 +17,12 @@ namespace SkyLegends.Controllers
         // GET: Store
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Posters.ToListAsync());
+            var posters = await _context.Posters
+                .AsNoTracking()
+                .OrderByDescending(p => p.CreatedAt)
+                .ToListAsync();
+
+            return View(posters);
         }
 
         // GET: Store/Details/5
@@ -29,6 +34,7 @@ namespace SkyLegends.Controllers
             }
 
             var poster = await _context.Posters
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (poster == null)
             {
@@ -41,7 +47,12 @@ namespace SkyLegends.Controllers
         // GET: Store/Videos
         public async Task<IActionResult> Videos()
         {
-            return View(await _context.Videos.ToListAsync());
+            var videos = await _context.Videos
+                .AsNoTracking()
+                .OrderByDescending(v => v.CreatedAt)
+                .ToListAsync();
+
+            return View(videos);
         }
     }
 }

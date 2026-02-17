@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -17,30 +17,22 @@
 </head>
 
 <body class="bg-jet-black text-steel-white flex flex-col min-h-screen">
-    <header class="bg-sky-night-blue shadow-lg">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <a class="text-2xl font-bold tracking-wider text-white hover:text-afterburner-red transition-colors duration-300"
-                        asp-area="" asp-controller="Home" asp-action="Index">
-                        SkyLegends
-                    </a>
-                    <div class="hidden md:block">
-                        <div class="ml-10 flex items-baseline space-x-4">
-                            <a class="hover:bg-titanium-grey hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                                asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            <a class="hover:bg-titanium-grey hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                                asp-area="" asp-controller="Store" asp-action="Index">Catalogo</a>
-                            <a class="hover:bg-titanium-grey hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                                asp-area="" asp-controller="Store" asp-action="Videos">Video</a>
-                            <a class="hover:bg-titanium-grey hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                                asp-area="" asp-controller="Home" asp-action="About">About</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="hidden md:block">
-                    <partial name="_LoginPartial" />
-                </div>
+    <header class="premium-navbar-wrap">
+        <nav class="premium-navbar max-w-7xl mx-auto" aria-label="Main navigation">
+            <a class="premium-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <span class="premium-brand-dot"></span>
+                <span>SkyLegends</span>
+            </a>
+
+            <div class="premium-nav-links">
+                <a class="premium-nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                <a class="premium-nav-link" asp-area="" asp-controller="Store" asp-action="Index">Catalogo</a>
+                <a class="premium-nav-link" asp-area="" asp-controller="Store" asp-action="Videos">Video</a>
+                <a class="premium-nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a>
+            </div>
+
+            <div class="premium-auth">
+                <partial name="_LoginPartial" />
             </div>
         </nav>
     </header>
