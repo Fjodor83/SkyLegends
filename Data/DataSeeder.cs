@@ -45,7 +45,7 @@ namespace SkyLegends.Data
                     {
                         Title = "F-16 in virata ad alta energia",
                         Description = "La potenza pura del Fighting Falcon catturata in una manovra al limite. Un omaggio all'ingegneria aeronautica.",
-                        ImageUrl = "/img/posters/f16-placeholder.jpg",
+                        ImageUrl = "/img/posters/f16-turn.jpg",
                         Tags = "F-16, Dogfight, Supersonic",
                         CreatedAt = DateTime.UtcNow
                     },
@@ -53,7 +53,7 @@ namespace SkyLegends.Data
                     {
                         Title = "Dogfight sopra le nuvole",
                         Description = "L'adrenalina del combattimento aereo. Due caccia si sfidano per la supremazia dei cieli.",
-                        ImageUrl = "/img/posters/dogfight-placeholder.jpg",
+                        ImageUrl = "/img/posters/dogfight-clouds.jpg",
                         Tags = "Dogfight, Action, Clouds",
                         CreatedAt = DateTime.UtcNow
                     },
@@ -61,7 +61,7 @@ namespace SkyLegends.Data
                     {
                         Title = "Supersonico all’alba",
                         Description = "Quando la velocità del suono viene infranta alle prime luci del giorno. Uno spettacolo visivo unico.",
-                        ImageUrl = "/img/posters/supersonic-placeholder.jpg",
+                        ImageUrl = "/img/posters/supersonic-dawn.jpg",
                         Tags = "Supersonic, Dawn, Atmospheric",
                         CreatedAt = DateTime.UtcNow
                     }
@@ -95,6 +95,60 @@ namespace SkyLegends.Data
             }
 
             await context.SaveChangesAsync();
+
+            // Ensure our specific missing posters exist
+            if (!context.Posters.Any(p => p.Title == "F-16 in virata ad alta energia"))
+            {
+                context.Posters.Add(new Poster
+                {
+                    Title = "F-16 in virata ad alta energia",
+                    Description = "La potenza pura del Fighting Falcon catturata in una manovra al limite. Un omaggio all'ingegneria aeronautica.",
+                    ImageUrl = "/img/posters/f16-turn.jpg",
+                    Tags = "F-16, Dogfight, Supersonic",
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+
+            if (!context.Posters.Any(p => p.Title == "Dogfight sopra le nuvole"))
+            {
+                context.Posters.Add(new Poster
+                {
+                    Title = "Dogfight sopra le nuvole",
+                    Description = "L'adrenalina del combattimento aereo. Due caccia si sfidano per la supremazia dei cieli.",
+                    ImageUrl = "/img/posters/dogfight-clouds.jpg",
+                    Tags = "Dogfight, Action, Clouds",
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+
+            if (!context.Posters.Any(p => p.Title == "Supersonico all’alba"))
+            {
+                context.Posters.Add(new Poster
+                {
+                    Title = "Supersonico all’alba",
+                    Description = "Quando la velocità del suono viene infranta alle prime luci del giorno. Uno spettacolo visivo unico.",
+                    ImageUrl = "/img/posters/supersonic-dawn.jpg",
+                    Tags = "Supersonic, Dawn, Atmospheric",
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+
+            await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
+
+            // Seed Videos
+            if (!context.Videos.Any())
+            {
+                context.Videos.Add(new Video
+                {
+                    Title = "Fighter Jet Action",
+                    Description = "High speed fighter jet maneuvers.",
+                    VideoUrl = "/img/posters/Fighter Jet.mp4",
+                    ThumbnailUrl = "/img/posters/f16-turn.jpg", // Using existing image as thumbnail
+                    CreatedAt = DateTime.UtcNow
+                });
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

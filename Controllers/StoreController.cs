@@ -37,5 +37,11 @@ namespace SkyLegends.Controllers
 
             return View(poster);
         }
+
+        // GET: Store/Videos
+        public async Task<IActionResult> Videos()
+        {
+            return View(await _context.Videos.ToListAsync());
+        }
     }
 }

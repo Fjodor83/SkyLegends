@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,22 +10,31 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
     </style>
 </head>
+
 <body class="bg-jet-black text-steel-white flex flex-col min-h-screen">
     <header class="bg-sky-night-blue shadow-lg">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
-                    <a class="text-2xl font-bold tracking-wider text-white hover:text-afterburner-red transition-colors duration-300" asp-area="" asp-controller="Home" asp-action="Index">
+                    <a class="text-2xl font-bold tracking-wider text-white hover:text-afterburner-red transition-colors duration-300"
+                        asp-area="" asp-controller="Home" asp-action="Index">
                         SkyLegends
                     </a>
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <a class="hover:bg-titanium-grey hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            <a class="hover:bg-titanium-grey hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors" asp-area="" asp-controller="Store" asp-action="Index">Catalogo</a>
-                            <a class="hover:bg-titanium-grey hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                            <a class="hover:bg-titanium-grey hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                                asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="hover:bg-titanium-grey hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                                asp-area="" asp-controller="Store" asp-action="Index">Catalogo</a>
+                            <a class="hover:bg-titanium-grey hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                                asp-area="" asp-controller="Store" asp-action="Videos">Video</a>
+                            <a class="hover:bg-titanium-grey hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                                asp-area="" asp-controller="Home" asp-action="About">About</a>
                         </div>
                     </div>
                 </div>
@@ -46,7 +56,8 @@
                 <p class="text-sm text-gray-400 mt-1">Arte ad alta quota.</p>
             </div>
             <div class="text-sm text-gray-400">
-                &copy; @DateTime.Now.Year - SkyLegends - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="hover:text-white">Privacy</a>
+                &copy; @DateTime.Now.Year - SkyLegends - <a asp-area="" asp-controller="Home" asp-action="Privacy"
+                    class="hover:text-white">Privacy</a>
             </div>
         </div>
     </footer>
@@ -55,4 +66,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
