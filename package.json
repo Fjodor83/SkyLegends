@@ -1,0 +1,17 @@
+{
+  "name": "skylegends",
+  "version": "1.0.0",
+  "description": "SkyLegends WebApp - ASP.NET Core MVC + TailwindCSS",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./Styles/tailwind.css -o ./wwwroot/css/site.css",
+    "watch:css": "tailwindcss -i ./Styles/tailwind.css -o ./wwwroot/css/site.css --watch"
+  },
+  "author": "SkyLegends",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.1"
+  }
+}

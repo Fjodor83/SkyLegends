@@ -1,0 +1,54 @@
+@model IEnumerable<SkyLegends.Models.Poster>
+
+@{
+    ViewData["Title"] = "Catalogo";
+}
+
+<div class="bg-jet-black min-h-screen py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h1 class="text-3xl font-extrabold text-white sm:text-4xl">
+                Catalogo Poster
+            </h1>
+            <p class="mt-4 text-xl text-gray-400">
+                Scegli la tua prossima leggenda.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
+            @foreach (var item in Model)
+            {
+                <div
+                    class="group relative bg-jet-black rounded-lg overflow-hidden shadow-lg border border-titanium-grey transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+                    <!-- Red side accent on hover -->
+                    <div
+                        class="absolute top-0 bottom-0 left-0 w-1 bg-afterburner-red transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0 z-20">
+                    </div>
+
+                    <div
+                        class="aspect-w-3 aspect-h-4 bg-gray-900 group-hover:opacity-100 sm:aspect-none sm:h-96 relative overflow-hidden">
+                        <img src="@item.ImageUrl" alt="@item.Title"
+                            class="w-full h-full object-center object-cover sm:w-full sm:h-full transition-transform duration-700 group-hover:scale-110">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-jet-black via-transparent to-transparent opacity-60">
+                        </div>
+                    </div>
+                    <div class="p-6 relative z-10">
+                        <h3
+                            class="text-xl font-bold text-white group-hover:text-afterburner-red transition-colors duration-300">
+                            <a asp-action="Details" asp-route-id="@item.Id">
+                                <span aria-hidden="true" class="absolute inset-0"></span>
+                                @item.Title
+                            </a>
+                        </h3>
+                        <p class="mt-2 text-sm text-gray-400">@item.Tags</p>
+                        <div
+                            class="mt-4 flex items-center text-afterburner-red text-sm font-medium opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                            Visualizza dettagli <span aria-hidden="true" class="ml-1">&rarr;</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

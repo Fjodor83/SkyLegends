@@ -1,0 +1,60 @@
+@model SkyLegends.Models.Video
+
+@{
+    ViewData["Title"] = "Nuovo Video";
+    Layout = "_Layout";
+}
+
+<div class="bg-jet-black min-h-screen py-10">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-white mb-6">Aggiungi Nuovo Video</h1>
+
+        <form asp-action="CreateVideo" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="text-red-500"></div>
+
+            <div>
+                <label asp-for="Title" class="block text-sm font-medium text-gray-300">Titolo</label>
+                <input asp-for="Title"
+                    class="mt-1 block w-full bg-titanium-grey border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-afterburner-red focus:border-afterburner-red sm:text-sm" />
+                <span asp-validation-for="Title" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="Description" class="block text-sm font-medium text-gray-300">Descrizione</label>
+                <textarea asp-for="Description" rows="3"
+                    class="mt-1 block w-full bg-titanium-grey border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-afterburner-red focus:border-afterburner-red sm:text-sm"></textarea>
+                <span asp-validation-for="Description" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="VideoUrl" class="block text-sm font-medium text-gray-300">URL Video (YouTube/Vimeo o
+                    locale)</label>
+                <input asp-for="VideoUrl"
+                    class="mt-1 block w-full bg-titanium-grey border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-afterburner-red focus:border-afterburner-red sm:text-sm" />
+                <span asp-validation-for="VideoUrl" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="ThumbnailUrl" class="block text-sm font-medium text-gray-300">URL Thumbnail
+                    (Opzionale)</label>
+                <input asp-for="ThumbnailUrl"
+                    class="mt-1 block w-full bg-titanium-grey border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-afterburner-red focus:border-afterburner-red sm:text-sm" />
+                <span asp-validation-for="ThumbnailUrl" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div class="flex items-center justify-end">
+                <a asp-action="Videos" class="text-sm font-medium text-gray-400 hover:text-white mr-4">Annulla</a>
+                <button type="submit"
+                    class="bg-afterburner-red hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">
+                    Salva Video
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

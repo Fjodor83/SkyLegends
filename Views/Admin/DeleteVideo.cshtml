@@ -1,0 +1,35 @@
+@model SkyLegends.Models.Video
+
+@{
+    ViewData["Title"] = "Elimina Video";
+    Layout = "_Layout";
+}
+
+<div class="bg-jet-black min-h-screen py-10">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-white mb-6">Elimina Video</h1>
+
+        <div class="bg-titanium-grey p-6 rounded-lg border border-red-500">
+            <h3 class="text-xl text-white mb-4">Sei sicuro di voler eliminare questo video?</h3>
+
+            <dl class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 mb-6">
+                <dt class="text-sm font-medium text-gray-400">Titolo</dt>
+                <dd class="text-sm text-white">@Model.Title</dd>
+
+                <dt class="text-sm font-medium text-gray-400">URL</dt>
+                <dd class="text-sm text-white">@Model.VideoUrl</dd>
+            </dl>
+
+            <form asp-action="DeleteVideo">
+                <input type="hidden" asp-for="Id" />
+                <div class="flex items-center">
+                    <button type="submit"
+                        class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-4">
+                        Conferma Eliminazione
+                    </button>
+                    <a asp-action="Videos" class="text-gray-300 hover:text-white">Annulla</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

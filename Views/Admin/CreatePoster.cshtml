@@ -1,0 +1,62 @@
+@model SkyLegends.Models.Poster
+
+@{
+    ViewData["Title"] = "Nuovo Poster";
+    Layout = "_Layout";
+}
+
+<div class="bg-jet-black min-h-screen py-10">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-white mb-6">Aggiungi Nuovo Poster</h1>
+
+        <form asp-action="CreatePoster" enctype="multipart/form-data" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="text-red-500"></div>
+
+            <div>
+                <label asp-for="Title" class="block text-sm font-medium text-gray-300">Titolo</label>
+                <input asp-for="Title"
+                    class="mt-1 block w-full bg-titanium-grey border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-afterburner-red focus:border-afterburner-red sm:text-sm" />
+                <span asp-validation-for="Title" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="Description" class="block text-sm font-medium text-gray-300">Descrizione</label>
+                <textarea asp-for="Description" rows="3"
+                    class="mt-1 block w-full bg-titanium-grey border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-afterburner-red focus:border-afterburner-red sm:text-sm"></textarea>
+                <span asp-validation-for="Description" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="Tags" class="block text-sm font-medium text-gray-300">Tags (separati da virgola)</label>
+                <input asp-for="Tags"
+                    class="mt-1 block w-full bg-titanium-grey border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-afterburner-red focus:border-afterburner-red sm:text-sm" />
+                <span asp-validation-for="Tags" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-300">Immagine File</label>
+                <input type="file" name="imageFile" class="mt-1 block w-full text-sm text-gray-400
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-full file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-afterburner-red file:text-white
+                  hover:file:bg-red-700
+                " />
+            </div>
+
+            <div class="flex items-center justify-end">
+                <a asp-action="Posters" class="text-sm font-medium text-gray-400 hover:text-white mr-4">Annulla</a>
+                <button type="submit"
+                    class="bg-afterburner-red hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">
+                    Salva Poster
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
