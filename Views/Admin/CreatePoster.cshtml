@@ -5,9 +5,9 @@
     Layout = "_Layout";
 }
 
-<div class="bg-jet-black min-h-screen py-10">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold text-white mb-6">Aggiungi Nuovo Poster</h1>
+<div class="page-shell bg-jet-black">
+    <div class="page-container max-w-3xl">
+        <h1 class="text-2xl sm:text-3xl font-bold text-white mb-6">Aggiungi Nuovo Poster</h1>
 
         <form asp-action="CreatePoster" enctype="multipart/form-data" class="space-y-6">
             <div asp-validation-summary="ModelOnly" class="text-red-500"></div>
@@ -44,10 +44,10 @@
                 " />
             </div>
 
-            <div class="flex items-center justify-end">
-                <a asp-action="Posters" class="text-sm font-medium text-gray-400 hover:text-white mr-4">Annulla</a>
+            <div class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
+                <a asp-action="Posters" class="text-sm font-medium text-gray-400 hover:text-white text-center">Annulla</a>
                 <button type="submit"
-                    class="bg-afterburner-red hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">
+                    class="w-full sm:w-auto bg-afterburner-red hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">
                     Salva Poster
                 </button>
             </div>
