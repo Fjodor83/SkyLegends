@@ -10,7 +10,7 @@
   const navbar = navbarWrap.querySelector(".premium-navbar");
   const burgerButton = navbarWrap.querySelector(".premium-burger");
   const mobilePanel = navbarWrap.querySelector(".premium-mobile-panel");
-  const desktopMediaQuery = window.matchMedia("(min-width: 1024px)");
+  const desktopMediaQuery = window.matchMedia("(min-width: 768px)");
 
   const setNavbarHeight = () => {
     const navbarHeight = Math.ceil(navbarWrap.getBoundingClientRect().height);
