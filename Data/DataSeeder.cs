@@ -11,144 +11,130 @@ namespace SkyLegends.Data
             var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            // Ensure Database is created
             await context.Database.EnsureCreatedAsync();
 
-            // Seed Roles
-            if (!await roleManager.RoleExistsAsync("Admin"))
+            await EnsureAdminRoleAndUserAsync(userManager, roleManager);
+            await EnsurePostersAsync(context);
+            await EnsureVideosAsync(context);
+        }
+
+        private static async Task EnsureAdminRoleAndUserAsync(
+            UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager)
+        {
+            const string adminRole = "Admin";
+            const string adminEmail = "admin@skylegends.local";
+
+            if (!await roleManager.RoleExistsAsync(adminRole))
             {
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
+                await roleManager.CreateAsync(new IdentityRole(adminRole));
             }
 
-            // Seed Admin User
-            var adminEmail = "admin@skylegends.local";
-            if (await userManager.FindByEmailAsync(adminEmail) == null)
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+            if (adminUser != null)
             {
-                var user = new IdentityUser
+                if (!await userManager.IsInRoleAsync(adminUser, adminRole))
                 {
-                    UserName = adminEmail,
-                    Email = adminEmail,
-                    EmailConfirmed = true
-                };
-                var result = await userManager.CreateAsync(user, "Password123!");
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(user, "Admin");
+                    await userManager.AddToRoleAsync(adminUser, adminRole);
                 }
+
+                return;
             }
 
-            // Seed Posters
-            if (!context.Posters.Any())
+            var user = new IdentityUser
             {
-                context.Posters.AddRange(
-                    new Poster
-                    {
-                        Title = "F-16 in virata ad alta energia",
-                        Description = "La potenza pura del Fighting Falcon catturata in una manovra al limite. Un omaggio all'ingegneria aeronautica.",
-                        ImageUrl = "/img/posters/f16-turn.jpg",
-                        Tags = "F-16, Dogfight, Supersonic",
-                        CreatedAt = DateTime.UtcNow
-                    },
-                    new Poster
-                    {
-                        Title = "Dogfight sopra le nuvole",
-                        Description = "L'adrenalina del combattimento aereo. Due caccia si sfidano per la supremazia dei cieli.",
-                        ImageUrl = "/img/posters/dogfight-clouds.jpg",
-                        Tags = "Dogfight, Action, Clouds",
-                        CreatedAt = DateTime.UtcNow
-                    },
-                    new Poster
-                    {
-                        Title = "Supersonico all’alba",
-                        Description = "Quando la velocità del suono viene infranta alle prime luci del giorno. Uno spettacolo visivo unico.",
-                        ImageUrl = "/img/posters/supersonic-dawn.jpg",
-                        Tags = "Supersonic, Dawn, Atmospheric",
-                        CreatedAt = DateTime.UtcNow
-                    }
-                );
-                await context.SaveChangesAsync();
+                UserName = adminEmail,
+                Email = adminEmail,
+                EmailConfirmed = true
+            };
+
+            var result = await userManager.CreateAsync(user, "Password123!");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(user, adminRole);
             }
+        }
 
-            // Ensure specific real posters exist (if table was already seeded with placeholders)
-            if (!context.Posters.Any(p => p.Title == "F-16 Fighting Falcon"))
+        private static async Task EnsurePostersAsync(ApplicationDbContext context)
+        {
+            var postersToEnsure = new List<Poster>
             {
-                context.Posters.Add(new Poster
-                {
-                    Title = "F-16 Fighting Falcon",
-                    Description = "Il caccia multiruolo per eccellenza. Agilità e potenza in un unico pacchetto.",
-                    ImageUrl = "/img/posters/F-16 Falcon.jpg",
-                    Tags = "F-16, USAF, Fighter",
-                    CreatedAt = DateTime.UtcNow
-                });
-            }
-
-            if (!context.Posters.Any(p => p.Title == "Ultimate Dogfight"))
-            {
-                context.Posters.Add(new Poster
-                {
-                    Title = "Ultimate Dogfight",
-                    Description = "Combattimento aereo ravvicinato. Adrenalina pura ad alta quota.",
-                    ImageUrl = "/img/posters/Dogfight.webp",
-                    Tags = "Dogfight, Action, Vintage",
-                    CreatedAt = DateTime.UtcNow
-                });
-            }
-
-            await context.SaveChangesAsync();
-
-            // Ensure our specific missing posters exist
-            if (!context.Posters.Any(p => p.Title == "F-16 in virata ad alta energia"))
-            {
-                context.Posters.Add(new Poster
+                new()
                 {
                     Title = "F-16 in virata ad alta energia",
                     Description = "La potenza pura del Fighting Falcon catturata in una manovra al limite. Un omaggio all'ingegneria aeronautica.",
                     ImageUrl = "/img/posters/f16-turn.jpg",
                     Tags = "F-16, Dogfight, Supersonic",
                     CreatedAt = DateTime.UtcNow
-                });
-            }
-
-            if (!context.Posters.Any(p => p.Title == "Dogfight sopra le nuvole"))
-            {
-                context.Posters.Add(new Poster
+                },
+                new()
                 {
                     Title = "Dogfight sopra le nuvole",
                     Description = "L'adrenalina del combattimento aereo. Due caccia si sfidano per la supremazia dei cieli.",
                     ImageUrl = "/img/posters/dogfight-clouds.jpg",
                     Tags = "Dogfight, Action, Clouds",
                     CreatedAt = DateTime.UtcNow
-                });
-            }
-
-            if (!context.Posters.Any(p => p.Title == "Supersonico all’alba"))
-            {
-                context.Posters.Add(new Poster
+                },
+                new()
                 {
                     Title = "Supersonico all’alba",
                     Description = "Quando la velocità del suono viene infranta alle prime luci del giorno. Uno spettacolo visivo unico.",
                     ImageUrl = "/img/posters/supersonic-dawn.jpg",
                     Tags = "Supersonic, Dawn, Atmospheric",
                     CreatedAt = DateTime.UtcNow
-                });
-            }
-
-            await context.SaveChangesAsync();
-            await context.SaveChangesAsync();
-
-            // Seed Videos
-            if (!context.Videos.Any())
-            {
-                context.Videos.Add(new Video
+                },
+                new()
                 {
-                    Title = "Fighter Jet Action",
-                    Description = "High speed fighter jet maneuvers.",
-                    VideoUrl = "/img/posters/Fighter Jet.mp4",
-                    ThumbnailUrl = "/img/posters/f16-turn.jpg", // Using existing image as thumbnail
+                    Title = "F-16 Fighting Falcon",
+                    Description = "Il caccia multiruolo per eccellenza. Agilità e potenza in un unico pacchetto.",
+                    ImageUrl = "/img/posters/F-16 Falcon.jpg",
+                    Tags = "F-16, USAF, Fighter",
                     CreatedAt = DateTime.UtcNow
-                });
-                await context.SaveChangesAsync();
+                },
+                new()
+                {
+                    Title = "Ultimate Dogfight",
+                    Description = "Combattimento aereo ravvicinato. Adrenalina pura ad alta quota.",
+                    ImageUrl = "/img/posters/Dogfight.webp",
+                    Tags = "Dogfight, Action, Vintage",
+                    CreatedAt = DateTime.UtcNow
+                }
+            };
+
+            var existingTitles = context.Posters
+                .Select(p => p.Title)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            var newPosters = postersToEnsure
+                .Where(p => !existingTitles.Contains(p.Title))
+                .ToList();
+
+            if (newPosters.Count == 0)
+            {
+                return;
             }
+
+            context.Posters.AddRange(newPosters);
+            await context.SaveChangesAsync();
+        }
+
+        private static async Task EnsureVideosAsync(ApplicationDbContext context)
+        {
+            if (context.Videos.Any())
+            {
+                return;
+            }
+
+            context.Videos.Add(new Video
+            {
+                Title = "Fighter Jet Action",
+                Description = "High speed fighter jet maneuvers.",
+                VideoUrl = "/img/posters/Fighter Jet.mp4",
+                ThumbnailUrl = "/img/posters/f16-turn.jpg",
+                CreatedAt = DateTime.UtcNow
+            });
+
+            await context.SaveChangesAsync();
         }
     }
 }
