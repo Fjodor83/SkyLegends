@@ -11,11 +11,13 @@ namespace SkyLegends.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _environment;
+        private readonly SkyLegends.Services.CloudinaryService _imageService;
 
-        public AdminController(ApplicationDbContext context, IWebHostEnvironment environment)
+        public AdminController(ApplicationDbContext context, IWebHostEnvironment environment, SkyLegends.Services.CloudinaryService imageService)
         {
             _context = context;
             _environment = environment;
+            _imageService = imageService;
         }
 
         // GET: Admin
@@ -50,7 +52,7 @@ namespace SkyLegends.Controllers
             {
                 if (imageFile != null && imageFile.Length > 0)
                 {
-                    poster.ImageUrl = await SavePosterImageAsync(imageFile);
+                    poster.ImageUrl = await _imageService.UploadImageAsync(imageFile);
                 }
                 else
                 {
@@ -112,7 +114,7 @@ namespace SkyLegends.Controllers
                 {
                     if (imageFile != null && imageFile.Length > 0)
                     {
-                        poster.ImageUrl = await SavePosterImageAsync(imageFile);
+                        poster.ImageUrl = await _imageService.UploadImageAsync(imageFile);
                     }
 
                     _context.Update(poster);
@@ -257,22 +259,6 @@ namespace SkyLegends.Controllers
             return RedirectToAction(nameof(Orders));
         }
 
-        private async Task<string> SavePosterImageAsync(IFormFile imageFile)
-        {
-            var fileName = Path.GetFileName(imageFile.FileName);
-            var uniqueFileName = $"{Guid.NewGuid()}_{fileName}";
-            var uploadsFolder = Path.Combine(_environment.WebRootPath, "img", "posters");
 
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            await using var stream = new FileStream(filePath, FileMode.Create);
-            await imageFile.CopyToAsync(stream);
-
-            return $"/img/posters/{uniqueFileName}";
-        }
     }
 }

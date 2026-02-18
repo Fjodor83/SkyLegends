@@ -45,6 +45,7 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<SkyLegends.Services.CartService>();
+builder.Services.AddSingleton<SkyLegends.Services.CloudinaryService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
