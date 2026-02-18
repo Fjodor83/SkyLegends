@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Pagamento annullato";
+}
+
+<div class="page-shell bg-jet-black">
+    <div class="page-container max-w-2xl text-center">
+        <div class="py-16">
+            <h1 class="text-3xl font-bold text-white mb-4">Pagamento annullato</h1>
+            <p class="text-lg text-gray-300 mb-8">
+                Il pagamento e stato annullato. I prodotti sono ancora nel carrello.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a asp-controller="Cart" asp-action="Index"
+                    class="bg-afterburner-red hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
+                    Torna al carrello
+                </a>
+                <a asp-controller="Store" asp-action="Index"
+                    class="border border-gray-600 text-gray-300 hover:text-white hover:border-gray-400 font-medium py-3 px-8 rounded-lg transition duration-300">
+                    Continua gli acquisti
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+

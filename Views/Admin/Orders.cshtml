@@ -1,0 +1,87 @@
+@model IEnumerable<SkyLegends.Models.Order>
+
+@{
+    ViewData["Title"] = "Gestione ordini";
+    Layout = "_Layout";
+}
+
+<div class="page-shell bg-jet-black">
+    <div class="page-container">
+        <h1 class="text-2xl sm:text-3xl font-bold text-white mb-8">Gestione ordini</h1>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-12">
+                <p class="text-gray-400 text-lg">Nessun ordine presente.</p>
+            </div>
+        }
+        else
+        {
+            <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-400">
+                    <thead class="text-xs text-gray-200 uppercase bg-sky-night-blue">
+                        <tr>
+                            <th scope="col" class="py-3 px-3 sm:px-6">#</th>
+                            <th scope="col" class="py-3 px-3 sm:px-6">Cliente</th>
+                            <th scope="col" class="py-3 px-3 sm:px-6">Totale</th>
+                            <th scope="col" class="py-3 px-3 sm:px-6">Stato</th>
+                            <th scope="col" class="py-3 px-3 sm:px-6">Data</th>
+                            <th scope="col" class="py-3 px-3 sm:px-6">Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr class="bg-titanium-grey border-b border-gray-700 hover:bg-gray-600">
+                                <td class="py-4 px-3 sm:px-6 text-white font-medium">@order.Id</td>
+                                <td class="py-4 px-3 sm:px-6">
+                                    <div class="text-white">@order.CustomerEmail</div>
+                                    @if (!string.IsNullOrWhiteSpace(order.CustomerName))
+                                    {
+                                        <div class="text-xs text-gray-400">@order.CustomerName</div>
+                                    }
+                                </td>
+                                <td class="py-4 px-3 sm:px-6 text-afterburner-red font-semibold">
+                                    EUR @order.TotalAmount.ToString("N2")
+                                </td>
+                                <td class="py-4 px-3 sm:px-6">
+                                    @{
+                                        var statusColor = order.Status switch
+                                        {
+                                            "Paid" => "text-green-400",
+                                            "Shipped" => "text-blue-400",
+                                            "Delivered" => "text-purple-400",
+                                            _ => "text-yellow-400"
+                                        };
+                                    }
+                                    <span class="@statusColor text-xs font-medium">@order.Status</span>
+                                </td>
+                                <td class="py-4 px-3 sm:px-6 whitespace-nowrap">
+                                    @order.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+                                <td class="py-4 px-3 sm:px-6 whitespace-nowrap">
+                                    <a asp-action="OrderDetails" asp-route-id="@order.Id"
+                                        class="font-medium text-blue-500 hover:underline mr-3">Dettagli</a>
+                                    @if (order.Status == "Paid")
+                                    {
+                                        <form asp-action="UpdateOrderStatus" method="post" class="inline">
+                                            <input type="hidden" name="id" value="@order.Id" />
+                                            <input type="hidden" name="status" value="Shipped" />
+                                            <button type="submit" class="font-medium text-green-400 hover:underline">
+                                                Segna come spedito
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        <div class="mt-4">
+            <a asp-action="Index" class="text-afterburner-red hover:underline">Torna alla dashboard</a>
+        </div>
+    </div>
+</div>

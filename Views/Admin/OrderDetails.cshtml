@@ -1,0 +1,94 @@
+@model SkyLegends.Models.Order
+
+@{
+    ViewData["Title"] = $"Ordine #{Model.Id}";
+    Layout = "_Layout";
+}
+
+<div class="page-shell bg-jet-black">
+    <div class="page-container max-w-3xl">
+        <h1 class="text-2xl sm:text-3xl font-bold text-white mb-6">Ordine #@Model.Id</h1>
+
+        <div class="bg-titanium-grey rounded-lg p-6 border border-gray-700 mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <p class="text-sm text-gray-400">Cliente</p>
+                    <p class="text-white font-medium">@Model.CustomerEmail</p>
+                    @if (!string.IsNullOrWhiteSpace(Model.CustomerName))
+                    {
+                        <p class="text-gray-300 text-sm">@Model.CustomerName</p>
+                    }
+                </div>
+                <div>
+                    <p class="text-sm text-gray-400">Stato</p>
+                    <p class="text-white font-medium">@Model.Status</p>
+                </div>
+                @if (!string.IsNullOrWhiteSpace(Model.PhoneNumber))
+                {
+                    <div>
+                        <p class="text-sm text-gray-400">Telefono</p>
+                        <p class="text-white">@Model.PhoneNumber</p>
+                    </div>
+                }
+                <div>
+                    <p class="text-sm text-gray-400">Data</p>
+                    <p class="text-white">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-400">Totale</p>
+                    <p class="text-afterburner-red font-bold text-xl">EUR @Model.TotalAmount.ToString("N2")</p>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.ShippingAddress))
+            {
+                <div class="mt-4 pt-4 border-t border-gray-700">
+                    <p class="text-sm text-gray-400">Indirizzo spedizione</p>
+                    <p class="text-white">@Model.ShippingAddress</p>
+                </div>
+            }
+        </div>
+
+        <h2 class="text-xl font-bold text-white mb-4">Articoli</h2>
+        <div class="space-y-3">
+            @foreach (var item in Model.Items)
+            {
+                <div class="flex items-center justify-between bg-titanium-grey rounded-lg p-4 border border-gray-700">
+                    <div>
+                        <p class="text-white font-medium">@item.PosterTitle</p>
+                        <p class="text-sm text-gray-400">Quantita: @item.Quantity x EUR @item.UnitPrice.ToString("N2")</p>
+                    </div>
+                    <span class="text-white font-semibold">EUR @item.Total.ToString("N2")</span>
+                </div>
+            }
+        </div>
+
+        <div class="mt-6 flex flex-col sm:flex-row gap-3">
+            @if (Model.Status == "Paid")
+            {
+                <form asp-action="UpdateOrderStatus" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="hidden" name="status" value="Shipped" />
+                    <button type="submit"
+                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition">
+                        Segna come spedito
+                    </button>
+                </form>
+            }
+            @if (Model.Status == "Shipped")
+            {
+                <form asp-action="UpdateOrderStatus" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="hidden" name="status" value="Delivered" />
+                    <button type="submit"
+                        class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition">
+                        Segna come consegnato
+                    </button>
+                </form>
+            }
+            <a asp-action="Orders" class="text-sm text-gray-400 hover:text-white py-2 px-4 transition">
+                Torna agli ordini
+            </a>
+        </div>
+    </div>
+</div>

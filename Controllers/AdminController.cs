@@ -44,7 +44,7 @@ namespace SkyLegends.Controllers
         // POST: Admin/CreatePoster
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePoster([Bind("Title,Description,Tags")] Poster poster, IFormFile? imageFile)
+        public async Task<IActionResult> CreatePoster([Bind("Title,Description,Tags,Price,IsAvailable")] Poster poster, IFormFile? imageFile)
         {
             if (ModelState.IsValid)
             {
@@ -102,7 +102,7 @@ namespace SkyLegends.Controllers
         // POST: Admin/EditPoster/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPoster(int id, [Bind("Id,Title,Description,ImageUrl,Tags,CreatedAt")] Poster poster, IFormFile? imageFile)
+        public async Task<IActionResult> EditPoster(int id, [Bind("Id,Title,Description,ImageUrl,Tags,Price,IsAvailable,CreatedAt")] Poster poster, IFormFile? imageFile)
         {
             if (id != poster.Id) return NotFound();
 
@@ -183,6 +183,78 @@ namespace SkyLegends.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Videos));
+        }
+
+        // GET: Admin/EditVideo/5
+        public async Task<IActionResult> EditVideo(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var video = await _context.Videos.FindAsync(id);
+            if (video == null) return NotFound();
+            return View(video);
+        }
+
+        // POST: Admin/EditVideo/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditVideo(int id, [Bind("Id,Title,Description,VideoUrl,ThumbnailUrl,CreatedAt")] Video video)
+        {
+            if (id != video.Id) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(video);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Videos.Any(e => e.Id == video.Id)) return NotFound();
+                    else throw;
+                }
+                return RedirectToAction(nameof(Videos));
+            }
+            return View(video);
+        }
+
+        // ======================== ORDERS ========================
+
+        // GET: Admin/Orders
+        public async Task<IActionResult> Orders()
+        {
+            var orders = await _context.Orders
+                .OrderByDescending(o => o.CreatedAt)
+                .ToListAsync();
+            return View(orders);
+        }
+
+        // GET: Admin/OrderDetails/5
+        public async Task<IActionResult> OrderDetails(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var order = await _context.Orders
+                .Include(o => o.Items)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (order == null) return NotFound();
+            return View(order);
+        }
+
+        // POST: Admin/UpdateOrderStatus
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateOrderStatus(int id, string status)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null) return NotFound();
+
+            order.Status = status;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Orders));
         }
 
         private async Task<string> SavePosterImageAsync(IFormFile imageFile)

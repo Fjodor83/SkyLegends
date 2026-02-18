@@ -111,3 +111,70 @@
     observer.observe(navbarWrap);
   }
 })();
+
+// Login Modal Logic
+(() => {
+  const loginModal = document.getElementById("login-modal");
+  const loginTrigger = document.getElementById("login-modal-trigger");
+  const loginClose = document.getElementById("login-modal-close");
+  const loginOverlay = document.getElementById("login-modal-overlay");
+
+  if (!loginModal || !loginTrigger) return;
+
+  const openModal = () => {
+    loginModal.classList.remove("hidden");
+    // Focus email input if exists
+    const emailInput = loginModal.querySelector("input[name='Input.Email']");
+    if (emailInput) setTimeout(() => emailInput.focus(), 100);
+    document.body.style.overflow = "hidden"; // Prevent scrolling
+  };
+
+  const closeModal = () => {
+    loginModal.classList.add("hidden");
+    document.body.style.overflow = ""; // Restore scrolling
+  };
+
+  loginTrigger.addEventListener("click", (e) => {
+    e.preventDefault();
+    openModal();
+  });
+
+  if (loginClose) {
+    loginClose.addEventListener("click", closeModal);
+  }
+
+  if (loginOverlay) {
+    loginOverlay.addEventListener("click", closeModal);
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !loginModal.classList.contains("hidden")) {
+      closeModal();
+    }
+  });
+})();
+
+// Cart Badge Updater
+(() => {
+  const badges = document.querySelectorAll(".cart-badge-sync");
+  if (badges.length === 0) return;
+
+  const updateBadge = async () => {
+    try {
+      const res = await fetch("/Cart/Count");
+      const data = await res.json();
+      badges.forEach(badge => {
+        if (data.count > 0) {
+          badge.textContent = data.count;
+          badge.style.display = "flex";
+        } else {
+          badge.style.display = "none";
+        }
+      });
+    } catch (e) {
+      // silently fail
+    }
+  };
+
+  updateBadge();
+})();

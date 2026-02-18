@@ -1,0 +1,114 @@
+@model SkyLegends.Models.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profilo";
+    var returnUrl = ViewBag.ReturnUrl as string;
+}
+
+<div class="page-shell bg-jet-black">
+    <div class="page-container max-w-3xl">
+        <h1 class="text-2xl sm:text-3xl font-bold text-white mb-6">Profilo utente</h1>
+
+        @if (TempData["ProfileWarning"] != null)
+        {
+            <div class="mb-4 rounded-lg border border-yellow-600/40 bg-yellow-900/20 text-yellow-200 px-4 py-3">
+                @TempData["ProfileWarning"]
+            </div>
+        }
+        @if (TempData["ProfileSaved"] != null)
+        {
+            <div class="mb-4 rounded-lg border border-green-600/40 bg-green-900/20 text-green-200 px-4 py-3">
+                @TempData["ProfileSaved"]
+            </div>
+        }
+
+        <form asp-action="Index" method="post" class="bg-titanium-grey rounded-lg border border-gray-700 p-6 space-y-4">
+            @if (!string.IsNullOrWhiteSpace(returnUrl))
+            {
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+            }
+
+            <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm"></div>
+
+            <div>
+                <label asp-for="FullName" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                <input asp-for="FullName"
+                    class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                <span asp-validation-for="FullName" class="text-red-500 text-xs"></span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label asp-for="Email" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                    <input asp-for="Email"
+                        class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                    <span asp-validation-for="Email" class="text-red-500 text-xs"></span>
+                </div>
+                <div>
+                    <label asp-for="PhoneNumber" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                    <input asp-for="PhoneNumber"
+                        class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                    <span asp-validation-for="PhoneNumber" class="text-red-500 text-xs"></span>
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <h2 class="text-lg font-semibold text-white mb-3">Indirizzo predefinito di consegna</h2>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label asp-for="StreetAddress" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                    <input asp-for="StreetAddress"
+                        class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                    <span asp-validation-for="StreetAddress" class="text-red-500 text-xs"></span>
+                </div>
+                <div>
+                    <label asp-for="StreetNumber" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                    <input asp-for="StreetNumber"
+                        class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                    <span asp-validation-for="StreetNumber" class="text-red-500 text-xs"></span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label asp-for="City" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                    <input asp-for="City"
+                        class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                    <span asp-validation-for="City" class="text-red-500 text-xs"></span>
+                </div>
+                <div>
+                    <label asp-for="Province" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                    <input asp-for="Province"
+                        class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                    <span asp-validation-for="Province" class="text-red-500 text-xs"></span>
+                </div>
+                <div>
+                    <label asp-for="Country" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                    <input asp-for="Country"
+                        class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                    <span asp-validation-for="Country" class="text-red-500 text-xs"></span>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                <button type="submit"
+                    class="bg-afterburner-red hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
+                    Salva profilo
+                </button>
+                @if (!string.IsNullOrWhiteSpace(returnUrl))
+                {
+                    <a href="@returnUrl"
+                        class="text-center border border-gray-600 text-gray-300 hover:text-white hover:border-gray-400 font-medium py-3 px-8 rounded-lg transition duration-300">
+                        Torna al pagamento
+                    </a>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

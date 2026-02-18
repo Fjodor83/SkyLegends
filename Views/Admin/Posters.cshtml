@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Gestione Poster";
+
     Layout = "_Layout";
 }
 
@@ -20,25 +21,46 @@
                 <thead class="text-xs text-gray-200 uppercase bg-sky-night-blue">
                     <tr>
                         <th scope="col" class="py-3 px-3 sm:px-6">Titolo</th>
+                        <th scope="col" class="py-3 px-3 sm:px-6">Prezzo</th>
                         <th scope="col" class="py-3 px-3 sm:px-6">Tags</th>
+                        <th scope="col" class="py-3 px-3 sm:px-6">Stato</th>
                         <th scope="col" class="py-3 px-3 sm:px-6">Creato il</th>
                         <th scope="col" class="py-3 px-3 sm:px-6">Azioni</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
+
                     {
                         <tr class="bg-titanium-grey border-b border-gray-700 hover:bg-gray-600">
                             <td class="py-4 px-3 sm:px-6 font-medium text-white whitespace-nowrap">
                                 @item.Title
                             </td>
+                            <td class="py-4 px-3 sm:px-6 text-afterburner-red font-semibold">
+                                €@item.Price.ToString("N2")
+                            </td>
                             <td class="py-4 px-3 sm:px-6">
                                 @item.Tags
+                            </td>
+                            <td class="py-4 px-3 sm:px-6">
+                                @if (item.IsAvailable)
+
+                                {
+                                    <span class="text-green-400 text-xs font-medium">Disponibile</span>
+                                }
+
+                                else
+
+                                {
+                                    <span class="text-gray-500 text-xs font-medium">Esaurito</span>
+                                }
                             </td>
                             <td class="py-4 px-3 sm:px-6 whitespace-nowrap">
                                 @item.CreatedAt.ToShortDateString()
                             </td>
                             <td class="py-4 px-3 sm:px-6 whitespace-nowrap">
+                                <a asp-action="EditPoster" asp-route-id="@item.Id"
+                                    class="font-medium text-blue-500 hover:underline mr-3">Modifica</a>
                                 <a asp-action="DeletePoster" asp-route-id="@item.Id"
                                     class="font-medium text-red-500 hover:underline">Elimina</a>
                             </td>

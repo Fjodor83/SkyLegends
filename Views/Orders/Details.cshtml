@@ -1,0 +1,100 @@
+﻿@model SkyLegends.Models.Order
+
+@{
+    ViewData["Title"] = $"Ordine #{Model.Id}";
+}
+
+<div class="page-shell bg-jet-black">
+    <div class="page-container max-w-3xl">
+        <div class="mb-6">
+            <a asp-action="Index" class="text-sm text-gray-400 hover:text-white transition">
+                Torna ai miei ordini
+            </a>
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl font-bold text-white mb-6">Ordine #@Model.Id</h1>
+
+        <div class="bg-titanium-grey rounded-lg p-6 border border-gray-700 mb-6">
+            <div class="flex items-center justify-between text-sm">
+                @{
+                    var steps = new[] { ("Pagato", "Paid"), ("Spedito", "Shipped"), ("Consegnato", "Delivered") };
+                    var statusIndex = Model.Status switch
+                    {
+                        "Paid" => 0,
+                        "Shipped" => 1,
+                        "Delivered" => 2,
+                        _ => -1
+                    };
+                }
+                @for (int i = 0; i < steps.Length; i++)
+                {
+                    var isComplete = i <= statusIndex;
+                    var dotClass = isComplete ? "bg-green-500" : "bg-gray-600";
+                    var textClass = isComplete ? "text-white" : "text-gray-500";
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="w-4 h-4 rounded-full @dotClass"></div>
+                        <span class="@textClass font-medium">@steps[i].Item1</span>
+                    </div>
+                    @if (i < steps.Length - 1)
+                    {
+                        var lineClass = i < statusIndex ? "bg-green-500" : "bg-gray-600";
+                        <div class="flex-1 h-0.5 @lineClass self-start mt-2"></div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div class="bg-titanium-grey rounded-lg p-4 border border-gray-700">
+                <p class="text-sm text-gray-400 mb-1">Data ordine</p>
+                <p class="text-white font-medium">@Model.CreatedAt.ToString("dd MMMM yyyy, HH:mm")</p>
+            </div>
+            <div class="bg-titanium-grey rounded-lg p-4 border border-gray-700">
+                <p class="text-sm text-gray-400 mb-1">Totale</p>
+                <p class="text-afterburner-red font-bold text-xl">EUR @Model.TotalAmount.ToString("N2")</p>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.ShippingAddress) || !string.IsNullOrWhiteSpace(Model.PhoneNumber))
+        {
+            <div class="bg-titanium-grey rounded-lg p-4 border border-gray-700 mb-6">
+                @if (!string.IsNullOrWhiteSpace(Model.ShippingAddress))
+                {
+                    <p class="text-sm text-gray-400 mb-1">Indirizzo spedizione</p>
+                    <p class="text-white mb-3">@Model.ShippingAddress</p>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.PhoneNumber))
+                {
+                    <p class="text-sm text-gray-400 mb-1">Telefono</p>
+                    <p class="text-white">@Model.PhoneNumber</p>
+                }
+            </div>
+        }
+
+        <h2 class="text-xl font-bold text-white mb-4">Articoli ordinati</h2>
+        <div class="space-y-3 mb-8">
+            @foreach (var item in Model.Items)
+            {
+                <div class="flex items-center justify-between bg-titanium-grey rounded-lg p-4 border border-gray-700">
+                    <div>
+                        <p class="text-white font-medium">@item.PosterTitle</p>
+                        <p class="text-sm text-gray-400">Quantita: @item.Quantity x EUR @item.UnitPrice.ToString("N2")</p>
+                    </div>
+                    <span class="text-white font-semibold">EUR @item.Total.ToString("N2")</span>
+                </div>
+            }
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+            <a asp-controller="Store" asp-action="Index"
+                class="text-center bg-afterburner-red hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg transition duration-300">
+                Continua gli acquisti
+            </a>
+            <a asp-action="Index"
+                class="text-center border border-gray-600 text-gray-300 hover:text-white hover:border-gray-400 font-medium py-2.5 px-6 rounded-lg transition duration-300">
+                I miei ordini
+            </a>
+        </div>
+    </div>
+</div>
+

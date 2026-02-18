@@ -1,0 +1,124 @@
+﻿@model SkyLegends.Models.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Pagamento";
+}
+
+<div class="page-shell bg-jet-black">
+    <div class="page-container max-w-4xl">
+        <h1 class="text-2xl sm:text-3xl font-bold text-white mb-8">Pagamento</h1>
+
+        <form asp-action="CreateSession" method="post" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-titanium-grey rounded-lg border border-gray-700 p-6 space-y-4">
+                <h2 class="text-xl font-semibold text-white mb-2">Dati di spedizione</h2>
+
+                <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm"></div>
+
+                <div>
+                    <label asp-for="CustomerName" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                    <input asp-for="CustomerName"
+                        class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                    <span asp-validation-for="CustomerName" class="text-red-500 text-xs"></span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label asp-for="Email" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                        <input asp-for="Email"
+                            class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                        <span asp-validation-for="Email" class="text-red-500 text-xs"></span>
+                    </div>
+                    <div>
+                        <label asp-for="PhoneNumber" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                        <input asp-for="PhoneNumber"
+                            class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                        <span asp-validation-for="PhoneNumber" class="text-red-500 text-xs"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label asp-for="StreetAddress" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                        <input asp-for="StreetAddress"
+                            class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                        <span asp-validation-for="StreetAddress" class="text-red-500 text-xs"></span>
+                    </div>
+                    <div>
+                        <label asp-for="StreetNumber" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                        <input asp-for="StreetNumber"
+                            class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                        <span asp-validation-for="StreetNumber" class="text-red-500 text-xs"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label asp-for="City" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                        <input asp-for="City"
+                            class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                        <span asp-validation-for="City" class="text-red-500 text-xs"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Province" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                        <input asp-for="Province"
+                            class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                        <span asp-validation-for="Province" class="text-red-500 text-xs"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Country" class="block text-sm font-medium text-gray-300 mb-1"></label>
+                        <input asp-for="Country"
+                            class="w-full rounded-lg border border-gray-600 bg-jet-black text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-afterburner-red" />
+                        <span asp-validation-for="Country" class="text-red-500 text-xs"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-titanium-grey rounded-lg border border-gray-700 overflow-hidden">
+                <div class="p-6 space-y-4">
+                    <h2 class="text-xl font-semibold text-white mb-2">Riepilogo ordine</h2>
+
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="@item.ImageUrl" alt="@item.Title" class="w-12 h-12 object-cover rounded">
+                                <div class="min-w-0">
+                                    <p class="text-white font-medium truncate">@item.Title</p>
+                                    <p class="text-sm text-gray-400">Quantita: @item.Quantity</p>
+                                </div>
+                            </div>
+                            <span class="text-white font-semibold">EUR @item.Total.ToString("N2")</span>
+                        </div>
+                    }
+                </div>
+
+                <div class="border-t border-gray-700 p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-xl text-gray-300 font-medium">Totale</span>
+                        <span class="text-2xl text-white font-bold">EUR @(((decimal)ViewBag.Total).ToString("N2"))</span>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg transition duration-300 text-lg shadow-lg shadow-green-600/20">
+                        Procedi al pagamento
+                    </button>
+
+                    <p class="mt-4 text-center text-xs text-gray-500">
+                        Verrai reindirizzato alla pagina sicura di Stripe per completare il pagamento.
+                    </p>
+                </div>
+            </div>
+        </form>
+
+        <div class="mt-4 text-center">
+            <a asp-controller="Cart" asp-action="Index" class="text-sm text-gray-400 hover:text-white transition">
+                Torna al carrello
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

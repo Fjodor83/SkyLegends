@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SkyLegends.Models;
 
 namespace SkyLegends.Data
@@ -11,6 +12,7 @@ namespace SkyLegends.Data
             var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
+            // EnsureCreated works for both SQLite and PostgreSQL
             await context.Database.EnsureCreatedAsync();
 
             await EnsureAdminRoleAndUserAsync(userManager, roleManager);
@@ -65,6 +67,7 @@ namespace SkyLegends.Data
                     Description = "La potenza pura del Fighting Falcon catturata in una manovra al limite. Un omaggio all'ingegneria aeronautica.",
                     ImageUrl = "/img/posters/f16-turn.jpg",
                     Tags = "F-16, Dogfight, Supersonic",
+                    Price = 29.99m,
                     CreatedAt = DateTime.UtcNow
                 },
                 new()
@@ -73,14 +76,16 @@ namespace SkyLegends.Data
                     Description = "L'adrenalina del combattimento aereo. Due caccia si sfidano per la supremazia dei cieli.",
                     ImageUrl = "/img/posters/dogfight-clouds.jpg",
                     Tags = "Dogfight, Action, Clouds",
+                    Price = 24.99m,
                     CreatedAt = DateTime.UtcNow
                 },
                 new()
                 {
-                    Title = "Supersonico all’alba",
+                    Title = "Supersonico all'alba",
                     Description = "Quando la velocità del suono viene infranta alle prime luci del giorno. Uno spettacolo visivo unico.",
                     ImageUrl = "/img/posters/supersonic-dawn.jpg",
                     Tags = "Supersonic, Dawn, Atmospheric",
+                    Price = 34.99m,
                     CreatedAt = DateTime.UtcNow
                 },
                 new()
@@ -89,6 +94,7 @@ namespace SkyLegends.Data
                     Description = "Il caccia multiruolo per eccellenza. Agilità e potenza in un unico pacchetto.",
                     ImageUrl = "/img/posters/F-16 Falcon.jpg",
                     Tags = "F-16, USAF, Fighter",
+                    Price = 29.99m,
                     CreatedAt = DateTime.UtcNow
                 },
                 new()
@@ -97,6 +103,7 @@ namespace SkyLegends.Data
                     Description = "Combattimento aereo ravvicinato. Adrenalina pura ad alta quota.",
                     ImageUrl = "/img/posters/Dogfight.webp",
                     Tags = "Dogfight, Action, Vintage",
+                    Price = 19.99m,
                     CreatedAt = DateTime.UtcNow
                 }
             };

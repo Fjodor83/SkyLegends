@@ -16,6 +16,11 @@ namespace SkyLegends.Models
 
         public string Tags { get; set; } = string.Empty;
 
+        [DataType(DataType.Currency)]
+        public decimal Price { get; set; }
+
+        public bool IsAvailable { get; set; } = true;
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

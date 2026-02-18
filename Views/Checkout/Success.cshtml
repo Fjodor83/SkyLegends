@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Ordine confermato";
+}
+
+<div class="page-shell bg-jet-black">
+    <div class="page-container max-w-2xl text-center">
+        <div class="py-16">
+            <h1 class="text-3xl font-bold text-white mb-4">Ordine confermato</h1>
+            <p class="text-lg text-gray-300 mb-2">
+                Grazie per il tuo acquisto.
+            </p>
+            @if (ViewBag.CustomerEmail != null)
+            {
+                <p class="text-gray-400 mb-8">
+                    Riceverai una conferma a <span class="text-white font-medium">@ViewBag.CustomerEmail</span>
+                </p>
+            }
+
+            <div class="bg-titanium-grey rounded-lg p-6 border border-gray-700 mb-8 inline-block">
+                <p class="text-sm text-gray-400">ID sessione</p>
+                <p class="text-afterburner-red font-mono text-sm">@ViewBag.SessionId</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Orders" asp-action="Index"
+                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
+                        Vai ai miei ordini
+                    </a>
+                }
+                <a asp-controller="Store" asp-action="Index"
+                    class="bg-afterburner-red hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
+                    Continua gli acquisti
+                </a>
+                <a asp-controller="Home" asp-action="Index"
+                    class="border border-gray-600 text-gray-300 hover:text-white hover:border-gray-400 font-medium py-3 px-8 rounded-lg transition duration-300">
+                    Torna alla pagina iniziale
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+

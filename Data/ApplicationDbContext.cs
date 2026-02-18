@@ -11,7 +11,10 @@ namespace SkyLegends.Data
         {
         }
 
-        public DbSet<Poster> Posters { get; set; }
-        public DbSet<Video> Videos { get; set; }
+        public DbSet<Poster> Posters { get; set; } = null!;
+        public DbSet<Video> Videos { get; set; } = null!;
+        public DbSet<Order> Orders { get; set; } = null!;
+        public DbSet<OrderItem> OrderItems { get; set; } = null!;
+        public DbSet<UserProfile> UserProfiles { get; set; } = null!;
     }
 }

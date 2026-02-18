@@ -7,15 +7,22 @@
     <div class="page-container">
         <h1 class="text-2xl sm:text-3xl font-bold text-white mb-8">Admin Dashboard</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            <a asp-action="Posters" class="block p-6 bg-titanium-grey rounded-lg border border-sky-night-blue hover:bg-gray-700 transition duration-300">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            <a asp-action="Posters"
+                class="block p-6 bg-titanium-grey rounded-lg border border-sky-night-blue hover:bg-gray-700 transition duration-300">
                 <h5 class="mb-2 text-xl sm:text-2xl font-bold tracking-tight text-white">Gestione Poster</h5>
                 <p class="font-normal text-gray-300">Aggiungi, modifica o rimuovi i poster dal catalogo.</p>
             </a>
-            
-            <a asp-action="Videos" class="block p-6 bg-titanium-grey rounded-lg border border-sky-night-blue hover:bg-gray-700 transition duration-300">
+
+            <a asp-action="Videos"
+                class="block p-6 bg-titanium-grey rounded-lg border border-sky-night-blue hover:bg-gray-700 transition duration-300">
                 <h5 class="mb-2 text-xl sm:text-2xl font-bold tracking-tight text-white">Gestione Video</h5>
                 <p class="font-normal text-gray-300">Carica e gestisci i video.</p>
+            </a>
+
+            <a asp-action="Orders" class="block p-6 bg-titanium-grey rounded-lg border border-green-900 hover:bg-gray-700 transition duration-300">
+                <h5 class="mb-2 text-xl sm:text-2xl font-bold tracking-tight text-white">📦 Ordini</h5>
+                <p class="font-normal text-gray-300">Visualizza e gestisci gli ordini dei clienti.</p>
             </a>
         </div>
     </div>
