@@ -4,92 +4,154 @@
     ViewData["Title"] = "Carrello";
 }
 
-<div class="page-shell bg-jet-black">
-    <div class="page-container max-w-4xl">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
+<style>
+    .cart-card {
+        background: #0a0f1c;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 0.75rem;
+        overflow: hidden;
+    }
+    .cart-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem 1.5rem;
+        flex-wrap: wrap;
+    }
+    .cart-row + .cart-row {
+        border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .qty-btn {
+        width: 2rem;
+        height: 2rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 0.375rem;
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+    .qty-btn:hover { background: rgba(255,255,255,0.15); }
+    .cart-checkout-btn {
+        display: block;
+        width: 100%;
+        background: #dc2626;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 0.875rem 1.5rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        text-decoration: none;
+        transition: background 0.2s;
+        margin-top: 1rem;
+    }
+    .cart-checkout-btn:hover { background: #b91c1c; }
+</style>
+
+<div class="page-shell bg-jet-black" style="overflow-x:hidden;">
+    <div class="page-container" style="max-width:48rem; overflow-x:hidden;">
+
+        @* Header *@
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;margin-bottom:2rem;">
             <div>
-                <h1 class="text-2xl sm:text-3xl font-bold text-white">Il tuo carrello</h1>
-                <p class="text-gray-400 text-sm mt-1">Controlla articoli, quantita e totale prima del checkout.</p>
+                <h1 class="text-2xl font-bold text-white">Il tuo carrello</h1>
+                <p class="text-gray-400 text-sm" style="margin-top:0.25rem;">Controlla articoli, quantità e totale prima del checkout.</p>
             </div>
             <a asp-controller="Store" asp-action="Index"
-                class="inline-flex items-center justify-center rounded-lg border border-gray-600 px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:border-gray-400 transition">
-                Continua gli acquisti
+               style="border:1px solid rgba(255,255,255,0.2);border-radius:0.5rem;padding:0.5rem 1rem;font-size:0.85rem;color:#d1d5db;text-decoration:none;white-space:nowrap;transition:border-color 0.2s;">
+                ← Continua gli acquisti
             </a>
         </div>
 
         @if (Model.Count == 0)
         {
-            <div class="bg-titanium-grey rounded-lg border border-gray-700 p-10 text-center">
-                <h2 class="text-white text-xl font-semibold mb-2">Carrello vuoto</h2>
-                <p class="text-gray-400 mb-6">Non hai ancora aggiunto prodotti.</p>
+            @* Empty state *@
+            <div class="cart-card" style="padding:3rem;text-align:center;">
+                <div style="font-size:3rem;margin-bottom:1rem;">🛒</div>
+                <h2 class="text-white text-xl font-semibold" style="margin-bottom:0.5rem;">Carrello vuoto</h2>
+                <p class="text-gray-400" style="margin-bottom:1.5rem;">Non hai ancora aggiunto prodotti.</p>
                 <a asp-controller="Store" asp-action="Index"
-                    class="inline-flex items-center justify-center bg-afterburner-red hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition">
+                   style="display:inline-block;background:#dc2626;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.5rem;text-decoration:none;">
                     Vai al catalogo
                 </a>
             </div>
         }
         else
         {
-            <div class="bg-titanium-grey rounded-lg border border-gray-700 overflow-hidden">
-                <div>
-                    @for (int i = 0; i < Model.Count; i++)
-                    {
-                        var item = Model[i];
-                        <div class="p-4 sm:p-6 @(i < Model.Count - 1 ? "border-b border-gray-700" : "")">
-                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                                <div class="flex gap-4 items-center min-w-0">
-                                    <img src="@item.ImageUrl" alt="@item.Title" class="w-16 h-16 rounded-lg object-cover border border-gray-700">
-                                    <div class="min-w-0">
-                                        <h3 class="text-white font-semibold truncate">@item.Title</h3>
-                                        <form asp-action="Remove" method="post" class="mt-1">
-                                            <input type="hidden" name="posterId" value="@item.PosterId" />
-                                            <button type="submit" class="text-red-500 hover:text-red-400 text-sm transition">
-                                                Rimuovi
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
+            @* Items list *@
+            <div class="cart-card" style="margin-bottom:1.5rem;">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var item = Model[i];
+                    <div class="cart-row">
+                        @* Image *@
+                        <img src="@item.ImageUrl" alt="@item.Title"
+                             style="width:4rem;height:4rem;object-fit:cover;border-radius:0.5rem;border:1px solid rgba(255,255,255,0.1);flex-shrink:0;" />
 
-                                <div class="text-gray-200 font-medium">
-                                    EUR @item.Price.ToString("N2")
-                                </div>
-
-                                <div>
-                                    <div class="inline-flex items-center rounded-lg border border-gray-600 overflow-hidden">
-                                        <form asp-action="UpdateQuantity" method="post">
-                                            <input type="hidden" name="posterId" value="@item.PosterId" />
-                                            <input type="hidden" name="quantity" value="@(item.Quantity - 1)" />
-                                            <button type="submit" class="px-3 py-2 text-white hover:bg-gray-700 transition">-</button>
-                                        </form>
-                                        <span class="px-4 py-2 text-white font-semibold w-12 text-center border-x border-gray-600">@item.Quantity</span>
-                                        <form asp-action="UpdateQuantity" method="post">
-                                            <input type="hidden" name="posterId" value="@item.PosterId" />
-                                            <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
-                                            <button type="submit" class="px-3 py-2 text-white hover:bg-gray-700 transition">+</button>
-                                        </form>
-                                    </div>
-                                </div>
-
-                                <div class="text-white font-bold sm:text-right">
-                                    EUR @item.Total.ToString("N2")
-                                </div>
-                            </div>
+                        @* Title + Remove *@
+                        <div style="flex:1;min-width:0;">
+                            <p class="text-white font-semibold" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">@item.Title</p>
+                            <p class="text-gray-400 text-sm" style="margin-top:0.1rem;">€@item.Price.ToString("N2") cad.</p>
+                            <form asp-action="Remove" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="posterId" value="@item.PosterId" />
+                                <button type="submit" style="background:none;border:none;color:#ef4444;font-size:0.75rem;cursor:pointer;padding:0;margin-top:0.2rem;">
+                                    Rimuovi
+                                </button>
+                            </form>
                         </div>
-                    }
-                </div>
+
+                        @* Qty control *@
+                        <div style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0;">
+                            <form asp-action="UpdateQuantity" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="posterId" value="@item.PosterId" />
+                                <input type="hidden" name="quantity" value="@(item.Quantity - 1)" />
+                                <button type="submit" class="qty-btn">−</button>
+                            </form>
+                            <span class="text-white font-bold" style="min-width:1.5rem;text-align:center;">@item.Quantity</span>
+                            <form asp-action="UpdateQuantity" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="posterId" value="@item.PosterId" />
+                                <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
+                                <button type="submit" class="qty-btn">+</button>
+                            </form>
+                        </div>
+
+                        @* Line total *@
+                        <div style="flex-shrink:0;text-align:right;">
+                            <p class="text-white font-bold">€@item.Total.ToString("N2")</p>
+                        </div>
+                    </div>
+                }
             </div>
 
-            <div class="mt-6 bg-sky-night-blue rounded-lg border border-gray-700 p-6">
-                <div class="flex items-center justify-between">
-                    <span class="text-lg text-gray-300 font-medium">Totale ordine</span>
-                    <span class="text-2xl text-white font-bold">EUR @(((decimal)ViewBag.Total).ToString("N2"))</span>
+            @* Summary + CTA *@
+            <div class="cart-card" style="padding:1.5rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+                    <span class="text-gray-400 text-sm">Spedizione</span>
+                    <span style="color:#4ade80;font-size:0.875rem;font-weight:600;">Gratuita</span>
                 </div>
-                <a asp-controller="Checkout" asp-action="Index"
-                    class="mt-4 w-full sm:w-auto inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition shadow-lg shadow-green-600/20">
-                    Procedi al pagamento
+                <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:0.75rem;">
+                    <span class="text-white font-bold text-lg">Totale</span>
+                    <span style="color:#dc2626;font-size:1.5rem;font-weight:800;">€@(((decimal)ViewBag.Total).ToString("N2"))</span>
+                </div>
+
+                <a asp-controller="Checkout" asp-action="Index" class="cart-checkout-btn">
+                    🔒 Procedi al pagamento
                 </a>
+
+                <p style="text-align:center;font-size:0.7rem;color:#4b5563;margin-top:0.5rem;">
+                    Pagamento sicuro con Stripe
+                </p>
             </div>
         }
+
     </div>
 </div>
-

@@ -3,12 +3,31 @@
 }
 
 <div class="page-shell bg-jet-black">
-    <div class="page-container max-w-2xl text-center">
+    <div class="page-container text-center" style="max-width:42rem;">
         <div class="py-16">
-            <h1 class="text-3xl font-bold text-white mb-4">Ordine confermato</h1>
-            <p class="text-lg text-gray-300 mb-2">
-                Grazie per il tuo acquisto.
-            </p>
+
+            @* Mock mode banner *@
+            @if (ViewBag.IsMock == true)
+            {
+                <div style="background:#7c3500;border:1px solid #f97316;border-radius:0.75rem;padding:0.75rem 1.25rem;margin-bottom:2rem;display:inline-block;">
+                    <p class="text-sm font-semibold" style="color:#fed7aa;">
+                        ⚠️ MODALITÀ SIMULAZIONE — Nessun pagamento reale è avvenuto. Questa è una vendita di test.
+                    </p>
+                </div>
+            }
+
+            @* Check icon *@
+            <div style="display:flex;justify-content:center;margin-bottom:1.5rem;">
+                <div style="width:4rem;height:4rem;border-radius:9999px;background:#14532d;display:flex;align-items:center;justify-content:center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width:2rem;height:2rem;" fill="none" viewBox="0 0 24 24" stroke="#4ade80" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+            </div>
+
+            <h1 class="text-3xl font-bold text-white mb-4">Ordine confermato!</h1>
+            <p class="text-lg text-gray-300 mb-2">Grazie per il tuo acquisto.</p>
+
             @if (ViewBag.CustomerEmail != null)
             {
                 <p class="text-gray-400 mb-8">
@@ -16,29 +35,32 @@
                 </p>
             }
 
-            <div class="bg-titanium-grey rounded-lg p-6 border border-gray-700 mb-8 inline-block">
-                <p class="text-sm text-gray-400">ID sessione</p>
-                <p class="text-afterburner-red font-mono text-sm">@ViewBag.SessionId</p>
-            </div>
+            @if (ViewBag.SessionId != null)
+            {
+                <div class="bg-titanium-grey rounded-lg p-4 border border-gray-700 mb-8 inline-block">
+                    <p class="text-xs text-gray-400">ID ordine</p>
+                    <p class="text-afterburner-red font-mono text-sm">@ViewBag.SessionId</p>
+                </div>
+            }
 
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <a asp-controller="Orders" asp-action="Index"
-                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
-                        Vai ai miei ordini
+                       style="background:#16a34a;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.5rem;text-decoration:none;">
+                        I miei ordini
                     </a>
                 }
                 <a asp-controller="Store" asp-action="Index"
-                    class="bg-afterburner-red hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
+                   style="background:#dc2626;color:#fff;font-weight:700;padding:0.75rem 2rem;border-radius:0.5rem;text-decoration:none;">
                     Continua gli acquisti
                 </a>
                 <a asp-controller="Home" asp-action="Index"
-                    class="border border-gray-600 text-gray-300 hover:text-white hover:border-gray-400 font-medium py-3 px-8 rounded-lg transition duration-300">
-                    Torna alla pagina iniziale
+                   style="border:1px solid #4b5563;color:#d1d5db;font-weight:500;padding:0.75rem 2rem;border-radius:0.5rem;text-decoration:none;">
+                    Home
                 </a>
             </div>
+
         </div>
     </div>
 </div>
-

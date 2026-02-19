@@ -116,12 +116,45 @@ namespace SkyLegends.Controllers
                 return View("Index", model);
             }
 
+            // ── MOCK MODE ──────────────────────────────────────────────────────
+            bool mockMode = _configuration.GetValue<bool>("Stripe:MockMode");
+            if (mockMode)
+            {
+                if (User.Identity?.IsAuthenticated == true)
+                    await UpsertDefaultAddressAsync(model);
+
+                var mockSessionId = $"mock_{Guid.NewGuid():N}";
+                var mockOrder = new Order
+                {
+                    StripeSessionId   = mockSessionId,
+                    CustomerEmail     = model.Email,
+                    CustomerName      = model.CustomerName,
+                    PhoneNumber       = model.PhoneNumber,
+                    ShippingAddress   = model.ShippingAddress,
+                    TotalAmount       = _cartService.GetTotal(),
+                    Status            = "Paid",
+                    UserId            = User.Identity?.IsAuthenticated == true ? User.Identity.Name : null,
+                    Items = cart.Select(item => new OrderItem
+                    {
+                        PosterId     = item.PosterId,
+                        PosterTitle  = item.Title,
+                        Quantity     = item.Quantity,
+                        UnitPrice    = item.Price
+                    }).ToList()
+                };
+                _context.Orders.Add(mockOrder);
+                await _context.SaveChangesAsync();
+                _cartService.ClearCart();
+
+                TempData["MockEmail"] = model.Email;
+                return RedirectToAction(nameof(Success), new { mock_order_id = mockOrder.Id });
+            }
+            // ──────────────────────────────────────────────────────────────────
+
             StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
 
             if (User.Identity?.IsAuthenticated == true)
-            {
                 await UpsertDefaultAddressAsync(model);
-            }
 
             var domain = $"{Request.Scheme}://{Request.Host}";
 
@@ -129,15 +162,12 @@ namespace SkyLegends.Controllers
             {
                 PriceData = new SessionLineItemPriceDataOptions
                 {
-                    UnitAmountDecimal = item.Price * 100, // Stripe uses cents
+                    UnitAmountDecimal = item.Price * 100,
                     Currency = "eur",
                     ProductData = new SessionLineItemPriceDataProductDataOptions
                     {
                         Name = item.Title,
-                        Images = new List<string>
-                        {
-                            $"{domain}{item.ImageUrl}"
-                        }
+                        Images = new List<string> { $"{domain}{item.ImageUrl}" }
                     }
                 },
                 Quantity = item.Quantity
@@ -151,23 +181,20 @@ namespace SkyLegends.Controllers
                 SuccessUrl = $"{domain}/Checkout/Success?session_id={{CHECKOUT_SESSION_ID}}",
                 CancelUrl = $"{domain}/Checkout/Cancel",
                 CustomerEmail = model.Email,
-                PhoneNumberCollection = new SessionPhoneNumberCollectionOptions
-                {
-                    Enabled = true
-                },
+                PhoneNumberCollection = new SessionPhoneNumberCollectionOptions { Enabled = true },
                 ShippingAddressCollection = new SessionShippingAddressCollectionOptions
                 {
                     AllowedCountries = new List<string> { "IT", "DE", "FR", "ES", "GB", "US", "AT", "CH", "BE", "NL" }
                 },
                 Metadata = new Dictionary<string, string>
                 {
-                    ["customer_name"] = model.CustomerName,
+                    ["customer_name"]  = model.CustomerName,
                     ["street_address"] = model.StreetAddress,
-                    ["street_number"] = model.StreetNumber,
-                    ["city"] = model.City,
-                    ["province"] = model.Province,
-                    ["country"] = model.Country,
-                    ["phone_number"] = model.PhoneNumber
+                    ["street_number"]  = model.StreetNumber,
+                    ["city"]           = model.City,
+                    ["province"]       = model.Province,
+                    ["country"]        = model.Country,
+                    ["phone_number"]   = model.PhoneNumber
                 }
             };
 
@@ -183,22 +210,21 @@ namespace SkyLegends.Controllers
                 var pendingOrder = new Order
                 {
                     StripeSessionId = session.Id,
-                    CustomerEmail = model.Email,
-                    CustomerName = model.CustomerName,
-                    PhoneNumber = model.PhoneNumber,
+                    CustomerEmail   = model.Email,
+                    CustomerName    = model.CustomerName,
+                    PhoneNumber     = model.PhoneNumber,
                     ShippingAddress = model.ShippingAddress,
-                    TotalAmount = _cartService.GetTotal(),
-                    Status = "Pending",
-                    UserId = User.Identity?.IsAuthenticated == true ? User.Identity.Name : null,
+                    TotalAmount     = _cartService.GetTotal(),
+                    Status          = "Pending",
+                    UserId          = User.Identity?.IsAuthenticated == true ? User.Identity.Name : null,
                     Items = cart.Select(item => new OrderItem
                     {
-                        PosterId = item.PosterId,
+                        PosterId    = item.PosterId,
                         PosterTitle = item.Title,
-                        Quantity = item.Quantity,
-                        UnitPrice = item.Price
+                        Quantity    = item.Quantity,
+                        UnitPrice   = item.Price
                     }).ToList()
                 };
-
                 _context.Orders.Add(pendingOrder);
                 await _context.SaveChangesAsync();
             }
@@ -207,8 +233,22 @@ namespace SkyLegends.Controllers
         }
 
         // GET: Checkout/Success
-        public async Task<IActionResult> Success(string session_id)
+        public async Task<IActionResult> Success(string? session_id, int? mock_order_id)
         {
+            // ── MOCK MODE ──────────────────────────────────────────────────────
+            if (mock_order_id.HasValue)
+            {
+                var mockOrder = await _context.Orders
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(o => o.Id == mock_order_id.Value);
+
+                ViewBag.IsMock        = true;
+                ViewBag.SessionId     = mockOrder?.StripeSessionId;
+                ViewBag.CustomerEmail = TempData["MockEmail"] ?? mockOrder?.CustomerEmail;
+                return View();
+            }
+            // ──────────────────────────────────────────────────────────────────
+
             if (string.IsNullOrEmpty(session_id))
                 return RedirectToAction("Index", "Home");
 
